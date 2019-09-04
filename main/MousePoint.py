@@ -8,10 +8,12 @@ import time
 # b)执行按键
 import ctypes
 import time
+import pyautogui as pag
 
 # 声音提示模块
 import winsound
 import sys
+
 
 
 # 按键仓库-BGN
@@ -153,7 +155,7 @@ def right_click( speed = 0.05 ):
 
 # c)功能调试区域-BGN
 
-#   11. -1/2- 开启/关闭鼠标左单击,鼠标右单击
+#   1. -1/2- 开启/关闭鼠标左单击,鼠标右单击
 def MouseClick( door, speed = 0.05 ):
     if( door == 1 ):
         left_click( speed )
@@ -161,6 +163,82 @@ def MouseClick( door, speed = 0.05 ):
         right_click( speed )
     else:
         return 0
+
+#  2. -0- 自定模式
+
+# 获取鼠标位置
+def getPos():
+    x, y = pag.position()
+    return [x,y]
+
+# 逻辑分析
+#   开头准备:
+#       获取蟠桃位置,提示 - 等待3秒
+#       获取万事通位置,提示 - 等待3秒
+#       获取兑换金丹位置 - 提示
+#   获取经验:
+#       移动到蟠桃位置
+#       右键10663下 - 停止右键
+#   兑换金丹:
+#       循环2次:
+#           移动到万事通位置 - 0.3s
+#           左键1下 - 0.3s
+#           移动到获取金丹的位置 - 0.3s
+#           左键1下 - 0.5s
+
+#   主控:
+#       开头准备
+#       循环:
+#           获取当前按键 - 判断是否停止键
+#           开头准备()
+#           循环:
+#               获取经验()
+#               兑换金丹()
+def mReadyPos():
+
+    panTao = getPos()
+    winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+    time.sleep(3)
+
+    npc = getPos()
+    winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+    time.sleep(3)
+
+    jinDan = getPos()
+    winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+    time.sleep(1)
+
+    return [ panTao, npc, jinDan ]
+
+def mGetEx( panTao, clickNum = 5500 ):
+    x,y = panTao
+    set_pos(x,y)
+    i=0
+    while( i < clickNum ):
+        if( '3' in key_check() ):
+            break
+        MouseClick(2, 0.01)
+        i+=1
+
+def mGetJianDan( npc, jinDan ):
+    nx, ny = npc
+    jx, jy = jinDan
+    for i in range(1):
+        set_pos(nx, ny)
+        time.sleep(0.4)
+
+        MouseClick(1, 0.08)
+        time.sleep(0.4)
+
+        set_pos(jx, jy)
+        time.sleep(0.4)
+
+        MouseClick(1, 0.08)
+        time.sleep(0.8)
+
+
+
+
 
 if __name__ == "__main__":
     print("\
@@ -224,6 +302,22 @@ if __name__ == "__main__":
                     else:
                         MouseClick(door, speed)
 
+            elif( '0' in keysIng ):
+                panTao, npc, jinDan = mReadyPos()
+
+                clickNum = input('请输入循环次数( 默认5500 ): ')
+                if( len(clickNum) == 0 ):
+                    clickNum = 5500
+                else:
+                    clickNum = int( clickNum )
+                print(clickNum)
+
+                while(True):
+                    mGetEx( panTao )
+                    if ('3' in key_check()):
+                        break
+                    time.sleep(1)
+                    mGetJianDan(npc, jinDan)
             # 挂挡
             elif( '7' in keysIng ):
                 speed = 0.08
