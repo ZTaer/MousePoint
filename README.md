@@ -1,4 +1,4 @@
-<h1># MousePoint v1.0</h1>
+﻿<h1># MousePoint v1.2</h1>
 
 <h3>
     鼠标连点器 - 包括左击和右击

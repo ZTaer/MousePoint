@@ -243,7 +243,7 @@ def mGetJianDan( npc, jinDan ):
 if __name__ == "__main__":
     print("\
 \n\
-#   MousePoint v1.0( 鼠标连点器 )\n\
+#   MousePoint v1.2( 鼠标连点器 )\n\
 #   作者: __OO7__ ( 反馈意见给作者: QQ - 1069798804 )\n\
 #   作者更新链接及开源链接: https://github.com/ZTaer/MousePoint/\n\
 #   注意: 此程序仅供个人研究学习,恶意使用本程序造成游戏破坏,作者将不承担任何法律责任( 依然执行本程序代表你已同意此协议! )\n\
@@ -294,13 +294,16 @@ if __name__ == "__main__":
 
             elif( '2' in keysIng or '3' in keysIng ):
                 door = 2
+                i = 0
                 while( True ):
                     if( '3' in key_check() or '1' in key_check() ):
                         winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
                         door = 0
+                        print('循环次数为: ', i )
                         break
                     else:
                         MouseClick(door, speed)
+                    i+=1
 
             elif( '0' in keysIng ):
                 panTao, npc, jinDan = mReadyPos()
