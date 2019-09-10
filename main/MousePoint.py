@@ -216,8 +216,9 @@ def mGetEx( panTao, clickNum = 5500 ):
     i=0
     while( i < clickNum ):
         if( '3' in key_check() ):
-            break
-        MouseClick(2, 0.01)
+            print('循环次数: ',i)
+            return False
+        MouseClick(2, 0.001)
         i+=1
 
 def mGetJianDan( npc, jinDan ):
@@ -307,20 +308,22 @@ if __name__ == "__main__":
 
             elif( '0' in keysIng ):
                 panTao, npc, jinDan = mReadyPos()
+                mGetExDoor = True
 
-                clickNum = input('请输入循环次数( 默认5500 ): ')
+                clickNum = input('请输入循环次数( 默认34000 ): ')
                 if( len(clickNum) == 0 ):
-                    clickNum = 5500
+                    clickNum = 34000
                 else:
                     clickNum = int( clickNum )
                 print(clickNum)
 
                 while(True):
-                    mGetEx( panTao )
-                    if ('3' in key_check()):
+                    mGetExDoor = mGetEx( panTao,clickNum )
+                    if ('3' in key_check() or mGetExDoor ):
                         break
-                    time.sleep(1)
-                    mGetJianDan(npc, jinDan)
+                    else:
+                        time.sleep(1)
+                        mGetJianDan(npc, jinDan)
             # 挂挡
             elif( '7' in keysIng ):
                 speed = 0.08
