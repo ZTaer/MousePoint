@@ -244,7 +244,7 @@ def mGetJianDan( npc, jinDan ):
 if __name__ == "__main__":
     print("\
 \n\
-#   MousePoint v1.2( 鼠标连点器 )\n\
+#   MousePoint v1.3( 鼠标连点器 )\n\
 #   作者: __OO7__ ( 反馈意见给作者: QQ - 1069798804 )\n\
 #   作者更新链接及开源链接: https://github.com/ZTaer/MousePoint/\n\
 #   注意: 此程序仅供个人研究学习,恶意使用本程序造成游戏破坏,作者将不承担任何法律责任( 依然执行本程序代表你已同意此协议! )\n\
