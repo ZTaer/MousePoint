@@ -8,10 +8,12 @@ import time
 # b)执行按键
 import ctypes
 import time
+import pyautogui as pag
 
 # 声音提示模块
 import winsound
 import sys
+
 
 
 # 按键仓库-BGN
@@ -153,7 +155,7 @@ def right_click( speed = 0.05 ):
 
 # c)功能调试区域-BGN
 
-#   11. -1/2- 开启/关闭鼠标左单击,鼠标右单击
+#   1. -1/2- 开启/关闭鼠标左单击,鼠标右单击
 def MouseClick( door, speed = 0.05 ):
     if( door == 1 ):
         left_click( speed )
@@ -162,10 +164,87 @@ def MouseClick( door, speed = 0.05 ):
     else:
         return 0
 
+#  2. -0- 自定模式
+
+# 获取鼠标位置
+def getPos():
+    x, y = pag.position()
+    return [x,y]
+
+# 逻辑分析
+#   开头准备:
+#       获取蟠桃位置,提示 - 等待3秒
+#       获取万事通位置,提示 - 等待3秒
+#       获取兑换金丹位置 - 提示
+#   获取经验:
+#       移动到蟠桃位置
+#       右键10663下 - 停止右键
+#   兑换金丹:
+#       循环2次:
+#           移动到万事通位置 - 0.3s
+#           左键1下 - 0.3s
+#           移动到获取金丹的位置 - 0.3s
+#           左键1下 - 0.5s
+
+#   主控:
+#       开头准备
+#       循环:
+#           获取当前按键 - 判断是否停止键
+#           开头准备()
+#           循环:
+#               获取经验()
+#               兑换金丹()
+def mReadyPos():
+
+    panTao = getPos()
+    winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+    time.sleep(3)
+
+    npc = getPos()
+    winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+    time.sleep(3)
+
+    jinDan = getPos()
+    winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+    time.sleep(1)
+
+    return [ panTao, npc, jinDan ]
+
+def mGetEx( panTao, clickNum = 5500 ):
+    x,y = panTao
+    set_pos(x,y)
+    i=0
+    while( i < clickNum ):
+        if( '3' in key_check() ):
+            print('循环次数: ',i)
+            return False
+        MouseClick(2, 0.001)
+        i+=1
+
+def mGetJianDan( npc, jinDan ):
+    nx, ny = npc
+    jx, jy = jinDan
+    for i in range(1):
+        set_pos(nx, ny)
+        time.sleep(0.4)
+
+        MouseClick(1, 0.08)
+        time.sleep(0.4)
+
+        set_pos(jx, jy)
+        time.sleep(0.4)
+
+        MouseClick(1, 0.08)
+        time.sleep(0.8)
+
+
+
+
+
 if __name__ == "__main__":
     print("\
 \n\
-#   MousePoint v1.0( 鼠标连点器 )\n\
+#   MousePoint v1.3( 鼠标连点器 )\n\
 #   作者: __OO7__ ( 反馈意见给作者: QQ - 1069798804 )\n\
 #   作者更新链接及开源链接: https://github.com/ZTaer/MousePoint/\n\
 #   注意: 此程序仅供个人研究学习,恶意使用本程序造成游戏破坏,作者将不承担任何法律责任( 依然执行本程序代表你已同意此协议! )\n\
@@ -216,14 +295,35 @@ if __name__ == "__main__":
 
             elif( '2' in keysIng or '3' in keysIng ):
                 door = 2
+                i = 0
                 while( True ):
                     if( '3' in key_check() or '1' in key_check() ):
                         winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
                         door = 0
+                        print('循环次数为: ', i )
                         break
                     else:
                         MouseClick(door, speed)
+                    i+=1
 
+            elif( '0' in keysIng ):
+                panTao, npc, jinDan = mReadyPos()
+                mGetExDoor = True
+
+                clickNum = input('请输入循环次数( 默认34000 ): ')
+                if( len(clickNum) == 0 ):
+                    clickNum = 34000
+                else:
+                    clickNum = int( clickNum )
+                print(clickNum)
+
+                while(True):
+                    mGetExDoor = mGetEx( panTao,clickNum )
+                    if ('3' in key_check() or mGetExDoor ):
+                        break
+                    else:
+                        time.sleep(1)
+                        mGetJianDan(npc, jinDan)
             # 挂挡
             elif( '7' in keysIng ):
                 speed = 0.08
